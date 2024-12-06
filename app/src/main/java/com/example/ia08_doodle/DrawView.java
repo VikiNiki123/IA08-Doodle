@@ -36,13 +36,17 @@ public class DrawView extends View {
         path = new Path();
     }
 
+    //This is the problem child vvv
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
-        canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        drawCanvas = new Canvas(canvasBitmap);
 
+        if (canvasBitmap == null) {
+            canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            drawCanvas = new Canvas(canvasBitmap);
+        }
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
