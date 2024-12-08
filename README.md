@@ -10,7 +10,7 @@ I don't know why, hopefully Friday will save me :(
 
 References
 https://www.youtube.com/watch?v=z1B_dNqEVfs&list=PLW98DQDDUrRhUf167J9K8KmwoK6iUA4Gi&index=2
-https://developer.android.com/develop/ui/views/graphics/drawables#java
+https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/
 https://developer.android.com/develop/ui/views/graphics/drawables#java
 https://developer.android.com/reference/android/R.color#holo_blue_dark
 
