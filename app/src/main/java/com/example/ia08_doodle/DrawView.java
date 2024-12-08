@@ -36,7 +36,6 @@ public class DrawView extends View {
         path = new Path();
     }
 
-    //This is the problem child vvv
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
@@ -46,7 +45,6 @@ public class DrawView extends View {
             drawCanvas = new Canvas(canvasBitmap);
         }
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -76,11 +74,11 @@ public class DrawView extends View {
         return true;
     }
     public void clearCanvas() {
-        //path.reset();
+        path.reset();
         if (canvasBitmap != null) {
             canvasBitmap.eraseColor(Color.TRANSPARENT);
         }
-        //invalidate();
+        invalidate();
     }
 
     public void changeBrushColor(int color) {

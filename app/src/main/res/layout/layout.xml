@@ -66,14 +66,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
-            android:progress="3" />
+            android:progress="3"
+            android:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/color_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/btn_red"
