@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var drawView: DrawView
     private lateinit var btnClear: Button
-    private lateinit var btnColor: Button
+    private lateinit var btnUndo: Button
     private lateinit var btnSize: Button
     private lateinit var btnOpacity: Button
     private lateinit var scaleBar: SeekBar
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         //Initialize Variables
         drawView = findViewById(R.id.draw_view)
         btnClear = findViewById(R.id.btn_clear)
-        btnColor = findViewById(R.id.btn_color)
+        btnUndo = findViewById(R.id.btn_undo)
         btnSize = findViewById(R.id.btn_size)
         btnOpacity = findViewById(R.id.btn_opacity)
         scaleBar = findViewById(R.id.scale_bar)
@@ -48,18 +48,18 @@ class MainActivity : ComponentActivity() {
             resetTools()
         }
 
-        //Button Control for Color
-        btnColor.setOnClickListener {
-            toggleColorLayout()
+        //Button Control for Undo
+        btnUndo.setOnClickListener {
+
         }
 
         //Set Up Color's Color Layout Buttons
-        btnRed.setOnClickListener { changeBrushColorAndHide(Color.RED) }
-        btnOrange.setOnClickListener { changeBrushColorAndHide(Color.rgb(255, 165, 0)) }
-        btnGreen.setOnClickListener { changeBrushColorAndHide(Color.GREEN) }
-        btnBlue.setOnClickListener { changeBrushColorAndHide(Color.BLUE) }
-        btnPurple.setOnClickListener { changeBrushColorAndHide(Color.rgb(128, 0, 128)) }
-        btnBlack.setOnClickListener { changeBrushColorAndHide(Color.BLACK) }
+        btnRed.setOnClickListener { changeBrushColor(Color.RED) }
+        btnOrange.setOnClickListener { changeBrushColor(Color.rgb(255, 165, 0)) }
+        btnGreen.setOnClickListener { changeBrushColor(Color.GREEN) }
+        btnBlue.setOnClickListener { changeBrushColor(Color.BLUE) }
+        btnPurple.setOnClickListener { changeBrushColor(Color.rgb(128, 0, 128)) }
+        btnBlack.setOnClickListener { changeBrushColor(Color.BLACK) }
 
         //Changing the Brush Size
         btnSize.setOnClickListener {
@@ -101,14 +101,15 @@ class MainActivity : ComponentActivity() {
         scaleBar.visibility = if (scaleBar.visibility == View.GONE) View.VISIBLE else View.GONE
     }
 
-    private fun toggleColorLayout() {
+    //No longer relevant for IA09 - Technical II
+    /*private fun toggleColorLayout() {
         colorLayout.visibility = if (colorLayout.visibility == View.GONE) View.VISIBLE else View.GONE
-    }
+    }*/
 
     //Color Button - Change the Color Functionality
-    private fun changeBrushColorAndHide(color: Int) {
+    private fun changeBrushColor(color: Int) {
         drawView.changeBrushColor(color)
-        colorLayout.visibility = View.GONE
+        //colorLayout.visibility = View.GONE
     }
 
     //Function to Reset tools to Default Values

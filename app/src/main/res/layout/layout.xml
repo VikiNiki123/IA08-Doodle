@@ -30,14 +30,14 @@
                 android:layout_margin="4dp" />
 
             <Button
-                android:id="@+id/btn_color"
+                android:id="@+id/btn_undo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="Color"
                 android:background="@android:color/holo_blue_dark"
-                android:textColor="@android:color/white"
-                android:layout_margin="4dp" />
+                android:text="Undo"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_opacity"

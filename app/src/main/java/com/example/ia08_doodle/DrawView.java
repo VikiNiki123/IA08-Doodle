@@ -8,16 +8,22 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawView extends View {
 
-    private Paint paint;
-    private Path path;
+    private Paint currpaint;
+    private Path currpath;
     private float brushSize = 20f;
     private int brushColor = Color.BLACK;
     private int brushOpacity = 255;
     private Bitmap canvasBitmap;
     private Canvas drawCanvas;
+
+    //New Pathways for Undo Feature
+    private final List<Path> paths = new ArrayList<>();
+    private final List<Paint> paints = new ArrayList<>();
 
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -25,15 +31,15 @@ public class DrawView extends View {
     }
 
     private void setupBrush() {
-        paint = new Paint();
-        paint.setColor(brushColor);
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(brushSize);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setAlpha(brushOpacity);
-        path = new Path();
+        currpaint = new Paint();
+        currpaint.setColor(brushColor);
+        currpaint.setAntiAlias(true);
+        currpaint.setStrokeWidth(brushSize);
+        currpaint.setStyle(Paint.Style.STROKE);
+        currpaint.setStrokeJoin(Paint.Join.ROUND);
+        currpaint.setStrokeCap(Paint.Cap.ROUND);
+        currpaint.setAlpha(brushOpacity);
+        currpath = new Path();
     }
 
     @Override
@@ -50,7 +56,7 @@ public class DrawView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(canvasBitmap, 0, 0, null);
-        canvas.drawPath(path, paint);
+        canvas.drawPath(currpath, currpaint);
     }
 
     @Override
@@ -60,21 +66,21 @@ public class DrawView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                path.moveTo(touchX, touchY);
+                currpath.moveTo(touchX, touchY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                path.lineTo(touchX, touchY);
+                currpath.lineTo(touchX, touchY);
                 break;
             case MotionEvent.ACTION_UP:
-                drawCanvas.drawPath(path, paint);
-                path.reset();
+                drawCanvas.drawPath(currpath, currpaint);
+                currpath.reset();
                 break;
         }
         invalidate();
         return true;
     }
     public void clearCanvas() {
-        path.reset();
+        currpath.reset();
         if (canvasBitmap != null) {
             canvasBitmap.eraseColor(Color.TRANSPARENT);
         }
@@ -83,17 +89,17 @@ public class DrawView extends View {
 
     public void changeBrushColor(int color) {
         brushColor = color;
-        paint.setColor(brushColor);
+        currpaint.setColor(brushColor);
     }
 
     public void changeBrushSize(float size) {
         brushSize = size;
-        paint.setStrokeWidth(brushSize);
+        currpaint.setStrokeWidth(brushSize);
     }
 
     public void changeBrushOpacity(int opacity) {
         brushOpacity = opacity;
-        paint.setAlpha(brushOpacity);
+        currpaint.setAlpha(brushOpacity);
     }
 
 
