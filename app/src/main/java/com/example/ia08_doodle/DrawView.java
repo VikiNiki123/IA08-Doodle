@@ -25,7 +25,8 @@ public class DrawView extends View {
 
     private final List<Path> pathList = new ArrayList<>();
     private final List<Paint> paintList = new ArrayList<>();
-    private final List<Path> undoStack = new ArrayList<>();
+    private final List<Path> undoPathStack = new ArrayList<>();
+    private final List<Paint> undoPaintStack = new ArrayList<>();
 
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,6 +45,11 @@ public class DrawView extends View {
         currPath = new Path();
     }
 
+    private Paint getCurrentPaint() {
+        Paint newPaint = new Paint(currPaint);
+        return newPaint;
+    }
+
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
@@ -55,7 +61,10 @@ public class DrawView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(canvasBitmap, 0, 0, null);
-        canvas.drawPath(currPath, currPaint); // Draw the current path while moving
+        for (int i = 0; i < pathList.size(); i++) {
+            canvas.drawPath(pathList.get(i), paintList.get(i));
+        }
+        canvas.drawPath(currPath, currPaint); //Draw the current path while moving
     }
 
     @Override
@@ -76,7 +85,7 @@ public class DrawView extends View {
             case MotionEvent.ACTION_UP:
                 drawCanvas.drawPath(currPath, currPaint);
                 pathList.add(currPath);
-                paintList.add(currPaint);
+                paintList.add(getCurrentPaint());
                 currPath = new Path();
                 break;
         }
@@ -87,23 +96,25 @@ public class DrawView extends View {
 
     public void clearCanvas() {
         pathList.clear();
-        undoStack.clear();
+        paintList.clear();
+        undoPathStack.clear();
+        undoPaintStack.clear();
         canvasBitmap.eraseColor(Color.TRANSPARENT);
         invalidate();
     }
 
     public void undoPath() {
         if (!pathList.isEmpty()) {
-            Path lastPath = pathList.remove(pathList.size() - 1);
-            undoStack.add(lastPath);
+            undoPathStack.add(pathList.remove(pathList.size() - 1));
+            undoPaintStack.add(paintList.remove(paintList.size() - 1));
             redrawCanvas();
         }
     }
 
     private void redrawCanvas() {
         canvasBitmap.eraseColor(Color.TRANSPARENT);
-        for (Path path : pathList) {
-            drawCanvas.drawPath(path, currPaint);
+        for (int i = 0; i < pathList.size(); i++) {
+            drawCanvas.drawPath(pathList.get(i), paintList.get(i));
         }
         invalidate();
     }
