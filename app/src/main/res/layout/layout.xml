@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:max="10"
             android:progress="3"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/color_layout"

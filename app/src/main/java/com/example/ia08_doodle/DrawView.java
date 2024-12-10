@@ -1,4 +1,5 @@
 package com.example.ia08_doodle;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,17 +14,18 @@ import java.util.List;
 
 public class DrawView extends View {
 
-    private Paint currpaint;
-    private Path currpath;
+    private Paint currPaint;
+    private Path currPath;
     private float brushSize = 20f;
     private int brushColor = Color.BLACK;
     private int brushOpacity = 255;
+
     private Bitmap canvasBitmap;
     private Canvas drawCanvas;
 
-    //New Pathways for Undo Feature
-    private final List<Path> paths = new ArrayList<>();
-    private final List<Paint> paints = new ArrayList<>();
+    private final List<Path> pathList = new ArrayList<>();
+    private final List<Paint> paintList = new ArrayList<>();
+    private final List<Path> undoStack = new ArrayList<>();
 
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -31,32 +33,29 @@ public class DrawView extends View {
     }
 
     private void setupBrush() {
-        currpaint = new Paint();
-        currpaint.setColor(brushColor);
-        currpaint.setAntiAlias(true);
-        currpaint.setStrokeWidth(brushSize);
-        currpaint.setStyle(Paint.Style.STROKE);
-        currpaint.setStrokeJoin(Paint.Join.ROUND);
-        currpaint.setStrokeCap(Paint.Cap.ROUND);
-        currpaint.setAlpha(brushOpacity);
-        currpath = new Path();
+        currPaint = new Paint();
+        currPaint.setColor(brushColor);
+        currPaint.setAntiAlias(true);
+        currPaint.setStrokeWidth(brushSize);
+        currPaint.setStyle(Paint.Style.STROKE);
+        currPaint.setStrokeJoin(Paint.Join.ROUND);
+        currPaint.setStrokeCap(Paint.Cap.ROUND);
+        currPaint.setAlpha(brushOpacity);
+        currPath = new Path();
     }
 
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
-
-        if (canvasBitmap == null) {
-            canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            drawCanvas = new Canvas(canvasBitmap);
-        }
+        canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        drawCanvas = new Canvas(canvasBitmap);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(canvasBitmap, 0, 0, null);
-        canvas.drawPath(currpath, currpaint);
+        canvas.drawPath(currPath, currPaint); // Draw the current path while moving
     }
 
     @Override
@@ -66,42 +65,63 @@ public class DrawView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                currpath.moveTo(touchX, touchY);
+                currPath = new Path();
+                currPath.moveTo(touchX, touchY);
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                currpath.lineTo(touchX, touchY);
+                currPath.lineTo(touchX, touchY);
                 break;
+
             case MotionEvent.ACTION_UP:
-                drawCanvas.drawPath(currpath, currpaint);
-                currpath.reset();
+                drawCanvas.drawPath(currPath, currPaint);
+                pathList.add(currPath);
+                paintList.add(currPaint);
+                currPath = new Path();
                 break;
         }
+
         invalidate();
         return true;
     }
+
     public void clearCanvas() {
-        currpath.reset();
-        if (canvasBitmap != null) {
-            canvasBitmap.eraseColor(Color.TRANSPARENT);
+        pathList.clear();
+        undoStack.clear();
+        canvasBitmap.eraseColor(Color.TRANSPARENT);
+        invalidate();
+    }
+
+    public void undoPath() {
+        if (!pathList.isEmpty()) {
+            Path lastPath = pathList.remove(pathList.size() - 1);
+            undoStack.add(lastPath);
+            redrawCanvas();
+        }
+    }
+
+    private void redrawCanvas() {
+        canvasBitmap.eraseColor(Color.TRANSPARENT);
+        for (Path path : pathList) {
+            drawCanvas.drawPath(path, currPaint);
         }
         invalidate();
     }
 
     public void changeBrushColor(int color) {
         brushColor = color;
-        currpaint.setColor(brushColor);
+        currPaint.setColor(brushColor);
     }
 
     public void changeBrushSize(float size) {
         brushSize = size;
-        currpaint.setStrokeWidth(brushSize);
+        currPaint.setStrokeWidth(brushSize);
     }
 
     public void changeBrushOpacity(int opacity) {
         brushOpacity = opacity;
-        currpaint.setAlpha(brushOpacity);
+        currPaint.setAlpha(brushOpacity);
     }
-
 
     public float getBrushSize() {
         return brushSize;

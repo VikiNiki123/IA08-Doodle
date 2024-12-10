@@ -48,9 +48,9 @@ class MainActivity : ComponentActivity() {
             resetTools()
         }
 
-        //Button Control for Undo
+        //Button for Undo
         btnUndo.setOnClickListener {
-
+            drawView.undoPath()
         }
 
         //Set Up Color's Color Layout Buttons
