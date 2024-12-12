@@ -4,8 +4,10 @@ You will run the program by 'opening the app' and you should be able to draw rig
 opacity, or the color of the brush, you can click on the corresponding button to select a new option for that. There is a clear button that will always 
 clear your canvas and change your brush to the defualt setting.
 
-I will mention a bug currently that will 'reset' the canvas when you engage in any buttons though the changes to your brush will still apply.
-I don't know why, hopefully Friday will save me :(
+With the new update, the pervious bug was fied and there is an undo button now, this button will allow the user to undo their strokes after their most
+pervious line made, similar to a queue (first in, first out) line of logic. All the user has to do to work the button is by clicking the 'Undo' to erase
+their most current mistake.
+
 
 
 References
